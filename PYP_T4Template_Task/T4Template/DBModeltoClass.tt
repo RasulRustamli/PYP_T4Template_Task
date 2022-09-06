@@ -1,0 +1,53 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Reflection"#>
+<#@ import namespace="System.IO" #>
+<#@ output extension=".cs" #>
+<#
+const string connection = "Server=DESKTOP-FHK353D;Database=Northwind;Trusted_Connection=True;MultipleActiveResultSets=true";
+using(SqlConnection con = new SqlConnection(connection))
+{
+if (con.State == System.Data.ConnectionState.Closed)
+    con.Open();
+using(SqlCommand cmd = new SqlCommand(@"select TABLE_NAME from INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'", con))
+    {
+
+    var dr = cmd.ExecuteReader();
+
+
+string path = @"C:\Users\rasul\OneDrive\Masaüstü\PYP_T4Template_Task\PYP_T4Template_Task\Models";
+Directory.CreateDirectory(Path.Combine(path));
+DirectoryInfo info = new DirectoryInfo(path);
+FileInfo[] files= info.GetFiles("*.cs");
+if(files.Length == 0)
+{
+    
+    while (dr.Read())
+    {
+        var templateClass = new string[]
+    {
+        "using System;",
+        "using System.Text;",
+        $"namespace {Assembly.GetExecutingAssembly().GetName().Name}.Models;",
+        $"public class {dr["TABLE_NAME"]}"+"{}"
+    };
+        string modelClass = $@"{path}\{dr["TABLE_NAME"].ToString().Replace(" ","")}.cs";
+       File.WriteAllLines(modelClass, templateClass);
+    }
+}
+
+    }
+
+
+
+}
+
+
+
+#>
