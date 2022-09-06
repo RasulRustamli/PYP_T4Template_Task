@@ -1,4 +1,4 @@
 using System;
 using System.Text;
 namespace TemporaryT4Assembly.Models;
-public class Order Details{}
+public class OrderDetails{}

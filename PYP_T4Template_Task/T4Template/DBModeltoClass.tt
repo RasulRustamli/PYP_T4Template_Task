@@ -11,12 +11,12 @@
 <#@ output extension=".cs" #>
 <#
 const string connection = "Server=DESKTOP-FHK353D;Database=Northwind;Trusted_Connection=True;MultipleActiveResultSets=true";
-using(SqlConnection con = new SqlConnection(connection))
-{
+SqlConnection con = new SqlConnection(connection);
+
 if (con.State == System.Data.ConnectionState.Closed)
     con.Open();
-using(SqlCommand cmd = new SqlCommand(@"select TABLE_NAME from INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'", con))
-    {
+SqlCommand cmd = new SqlCommand(@"select TABLE_NAME from INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'", con);
+    
 
     var dr = cmd.ExecuteReader();
 
@@ -35,19 +35,14 @@ if(files.Length == 0)
         "using System;",
         "using System.Text;",
         $"namespace {Assembly.GetExecutingAssembly().GetName().Name}.Models;",
-        $"public class {dr["TABLE_NAME"]}"+"{}"
+        $"public class {dr["TABLE_NAME"].ToString().Replace(" ","")}"+"{}"
     };
         string modelClass = $@"{path}\{dr["TABLE_NAME"].ToString().Replace(" ","")}.cs";
        File.WriteAllLines(modelClass, templateClass);
     }
 }
 
-    }
-
-
-
-}
-
+ 
 
 
 #>

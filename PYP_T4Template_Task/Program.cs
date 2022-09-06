@@ -35,7 +35,8 @@ if(files.Length == 0)
          File.WriteAllLines(modelClass, templateClass);
     }
 }
-    
 
+Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name);
+var c = Assembly.GetExecutingAssembly();
 
 Console.WriteLine("dasdsasdadsa");
